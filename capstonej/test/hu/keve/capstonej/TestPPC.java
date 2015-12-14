@@ -29,6 +29,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package hu.keve.capstonej;
 
+import org.bridj.Pointer;
+
 import hu.keve.capstonebinding.CapstoneLibrary.cs_arch;
 import hu.keve.capstonebinding.CapstoneLibrary.cs_mode;
 import hu.keve.capstonebinding.CapstoneLibrary.cs_opt_type;
@@ -47,14 +49,14 @@ import junit.framework.TestSuite;
 /**
  * Unit test for simple App.
  */
-public class AppTest extends TestCase {
+public class TestPPC extends TestCase {
     /**
      * Create the test case
      *
      * @param testName
      *            name of the test case
      */
-    public AppTest(String testName) {
+    public TestPPC(String testName) {
         super(testName);
     }
 
@@ -62,23 +64,13 @@ public class AppTest extends TestCase {
      * @return the suite of tests being tested
      */
     public static Test suite() {
-        return new TestSuite(AppTest.class);
+        return new TestSuite(TestPPC.class);
     }
 
-    static byte[] hexString2Byte(String s) {
-        // from
-        // http://stackoverflow.com/questions/140131/convert-a-string-representation-of-a-hex-dump-to-a-byte-array-using-java
-        int len = s.length();
-        byte[] data = new byte[len / 2];
-        for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4) + Character.digit(s.charAt(i + 1), 16));
-        }
-        return data;
-    }
 
     static final String PPC_CODE = "80200000803f00001043230ed04400804c4322022d0300807c4320147c4320934f2000214cc8002140820014";
 
-    public void testApp() throws CapstoneException {
+    public void testPPC() throws CapstoneException {
         System.err.format("Binding %d.%d\n", Capstone.getBindingApiMajor(), Capstone.getBindingApiMinor());
         System.err.format("Library %d.%d\n", Capstone.getLibraryApiMajor(), Capstone.getLibraryApiMinor());
         System.err.format("Supports all archs %b\n", Capstone.isSupported(cs_arch.CS_ARCH_ALL));
@@ -89,10 +81,11 @@ public class AppTest extends TestCase {
             capstone.setOption(cs_opt_type.CS_OPT_DETAIL, cs_opt_value.CS_OPT_ON);
             capstone.setOption(cs_opt_type.CS_OPT_SYNTAX, cs_opt_value.CS_OPT_SYNTAX_ATT);
 
-            byte[] buf = hexString2Byte(PPC_CODE);
+            byte[] buf = Util.hexString2Byte(PPC_CODE);
             CapstoneDisassembly disasm = capstone.disasm(buf, 0x1000l);
             try {
-                for (cs_insn is : disasm) {
+                for (Pointer<cs_insn> isP : disasm) {
+                    cs_insn is = isP.get();
                     System.out.println(is);
                     // System.out.println(ppc_insn.fromValue(is.id()));
                     System.out.println("mnemonic: " + is.mnemonic().getCString());

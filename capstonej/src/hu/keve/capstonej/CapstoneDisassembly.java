@@ -39,15 +39,13 @@ import hu.keve.capstonebinding.CapstoneLibrary.ppc_insn_group;
 import hu.keve.capstonebinding.cs_detail;
 import hu.keve.capstonebinding.cs_insn;
 
-public final class CapstoneDisassembly implements Iterator<cs_insn>, Iterable<cs_insn> {
+public final class CapstoneDisassembly implements Iterable<Pointer<cs_insn>> {
     private final Pointer<cs_insn> insnA;
     private final int count;
-    private int index;
 
     public CapstoneDisassembly(final Pointer<cs_insn> insnA, final int count) {
         this.insnA = insnA;
         this.count = count;
-        index = 0;
     }
 
     public void close() {
@@ -66,26 +64,6 @@ public final class CapstoneDisassembly implements Iterator<cs_insn>, Iterable<cs
         return count;
     }
 
-    public Iterator<cs_insn> iterator() {
-        index = 0;
-        return this;
-    }
-
-    public boolean hasNext() {
-        return index < count;
-    }
-
-    public cs_insn next() {
-        if (index >= count) {
-            throw new NoSuchElementException();
-        }
-        return getInsn(index++);
-    }
-
-    public void remove() {
-        throw new UnsupportedOperationException();
-    }
-
     public static boolean group(cs_insn insn, ppc_insn_group grp) {
         return group(insn, grp.value());
     }
@@ -98,5 +76,25 @@ public final class CapstoneDisassembly implements Iterator<cs_insn>, Iterable<cs
             }
         }
         return false;
+    }
+
+    @Override
+    public Iterator<Pointer<cs_insn>> iterator() {
+        return new Iterator<Pointer<cs_insn>>() {
+            int idx = 0;
+
+            @Override
+            public boolean hasNext() {
+                return idx < count;
+            }
+
+            @Override
+            public Pointer<cs_insn> next() {
+                if (idx >= count) {
+                    throw new NoSuchElementException();
+                }
+                return getInsnP(idx++);
+            }
+        };
     }
 }
