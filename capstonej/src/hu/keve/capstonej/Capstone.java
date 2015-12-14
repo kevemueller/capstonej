@@ -148,6 +148,25 @@ public final class Capstone {
         return null == regNameBytes ? null : regNameBytes.getCString();
     }
 
+    public static final class RegsAccess {
+        short[] regsRead;
+        short[] regsWritten;
+    }
+
+    public RegsAccess regsAccess(Pointer<cs_insn> insn) throws CapstoneException {
+        Pointer<Short> regs_read = Pointer.allocateShorts(64);
+        Pointer<Short> regs_write = Pointer.allocateShorts(64);
+        Pointer<Byte> regs_read_count = Pointer.allocateByte();
+        Pointer<Byte> regs_write_count = Pointer.allocateByte();
+        IntValuedEnum<cs_err> err = CapstoneLibrary.csRegsAccess(handleP.getCLong(), insn, regs_read, regs_read_count,
+                regs_write, regs_write_count);
+        checkError(err);
+        RegsAccess regsAccess = new RegsAccess();
+        regsAccess.regsRead = regs_read.getShorts(regs_read_count.get());
+        regsAccess.regsWritten = regs_write.getShorts(regs_write_count.get());
+        return regsAccess;
+    }
+
     // TODO: implement csDisasmIter
     // TODO: implement skipdata callback
 
