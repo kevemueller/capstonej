@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2015, Keve Müller
+Copyright (c) 2015, Keve MÃ¼ller
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
