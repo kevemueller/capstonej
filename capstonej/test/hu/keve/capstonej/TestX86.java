@@ -39,7 +39,6 @@ import hu.keve.capstonebinding.cs_detail;
 import hu.keve.capstonebinding.cs_insn;
 import hu.keve.capstonebinding.cs_x86;
 import hu.keve.capstonebinding.cs_x86_op;
-import hu.keve.capstonej.Capstone.RegsAccess;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -102,18 +101,6 @@ public class TestX86 extends TestCase {
                         cs_x86_op op = isdX86.operands().get(opc);
                         System.out.println(op);
                     }
-
-                    RegsAccess regsAccess = capstone.regsAccess(isP);
-                    System.out.println("Registers read:");
-                    for (short reg : regsAccess.regsRead) {
-                        System.out.printf(" %s", capstone.regName(reg));
-                    }
-                    System.out.println();
-                    System.out.println("Registers written:");
-                    for (short reg : regsAccess.regsWritten) {
-                        System.out.printf(" %s", capstone.regName(reg));
-                    }
-                    System.out.println();
                 }
             } finally {
                 disasm.close();
