@@ -40,6 +40,7 @@ import hu.keve.capstonebinding.CapstoneLibrary.cs_mode;
 import hu.keve.capstonebinding.CapstoneLibrary.cs_opt_type;
 import hu.keve.capstonebinding.CapstoneLibrary.cs_opt_value;
 import hu.keve.capstonebinding.cs_insn;
+import hu.keve.capstonebinding.cs_opt_skipdata;
 
 public final class Capstone {
     private Pointer<SizeT> handleP = Pointer.allocateSizeT();
@@ -123,6 +124,11 @@ public final class Capstone {
         checkError(err);
     }
 
+    public void setOption(cs_opt_type csOpt, Pointer<cs_opt_skipdata> skipDataOption) throws CapstoneException {
+        IntValuedEnum<cs_err> err = CapstoneLibrary.csOption(handleP.getCLong(), csOpt, skipDataOption.getPeer());
+        checkError(err);
+    }
+
     public CapstoneDisassembly disasm(byte[] buf, long address) throws CapstoneException {
         Pointer<Pointer<cs_insn>> insn = Pointer.allocatePointer(cs_insn.class);
         Pointer<Byte> bufP = Pointer.pointerToBytes(buf);
@@ -149,7 +155,6 @@ public final class Capstone {
     }
 
     // TODO: implement csDisasmIter
-    // TODO: implement skipdata callback
 
     public void close() throws CapstoneException {
         IntValuedEnum<cs_err> err = CapstoneLibrary.csClose(handleP);
