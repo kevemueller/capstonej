@@ -37,14 +37,8 @@ import hu.keve.capstonebinding.CapstoneLibrary.cs_mode;
 import hu.keve.capstonebinding.CapstoneLibrary.cs_opt_type;
 import hu.keve.capstonebinding.CapstoneLibrary.cs_opt_value;
 import hu.keve.capstonebinding.CapstoneLibrary.cs_skipdata_cb_t;
-import hu.keve.capstonebinding.CapstoneLibrary.ppc_bc;
-import hu.keve.capstonebinding.CapstoneLibrary.ppc_bh;
-import hu.keve.capstonebinding.CapstoneLibrary.ppc_op_type;
-import hu.keve.capstonebinding.cs_detail;
 import hu.keve.capstonebinding.cs_insn;
 import hu.keve.capstonebinding.cs_opt_skipdata;
-import hu.keve.capstonebinding.cs_ppc;
-import hu.keve.capstonebinding.cs_ppc_op;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -71,7 +65,7 @@ public class TestSkipdata extends TestCase {
     }
 
     static final byte[] X86_CODE = Util.hexString2Byte("8d4c320801d881c634120000009192");
-    static final String[] X86_CODE_DIS = { "00001000:\tlea ecx, dword ptr [edx + esi + 8]", "00001004:\tadd eax, ebx",
+    static final String[] X86_CODE_DIS = { "00001000:\tlea ecx, [edx + esi + 8]", "00001004:\tadd eax, ebx",
             "00001006:\tadd esi, 0x1234", "0000100c:\t%s 0x00", "0000100d:\txchg eax, ecx",
             "0000100e:\txchg eax, edx" };
 
