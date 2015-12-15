@@ -95,6 +95,10 @@ public final class CapstoneDisassembly implements Iterable<Pointer<cs_insn>> {
                 }
                 return getInsnP(idx++);
             }
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
         };
     }
 }
